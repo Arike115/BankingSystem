@@ -54,7 +54,7 @@ namespace BankingSystem.Application.Commands.AccountRegistration
             }
             catch (Exception e)
             {
-                _logger.LogError($"An error occurred while Shared Job => {e.InnerException.Message} || {e.InnerException.StackTrace}");
+                _logger.LogError($"An error occurred while creating account => {e.InnerException.Message} || {e.InnerException.StackTrace}");
                 return new BaseResponse(false, e.Message);
             }
         }
