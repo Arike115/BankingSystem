@@ -1,4 +1,6 @@
 ﻿using BankingSystem.Application.Commands.AccountRegistration;
+using BankingSystem.Application.Query;
+using BankingSystem.Domain.Dto;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +26,12 @@ namespace BankingSystem.Controllers
                 return BadRequest(response);
 
             return Ok(response);
+        }
+        [HttpGet("get-all-account")]
+        public async Task<ActionResult<List<GetAllAccountDto>>> GetAllJob([FromQuery] GetAccountQuery query)
+        {
+            var account = await _mediator.Send(query);
+            return Ok(account);
         }
     }
 }

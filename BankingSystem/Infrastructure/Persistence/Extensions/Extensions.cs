@@ -6,7 +6,7 @@ using FluentValidation.AspNetCore;
 using BankingSystem.Application.Commands.AccountRegistration;
 using Microsoft.OpenApi.Models;
 
-namespace BankingSystem.Infrastructure.Persistence
+namespace BankingSystem.Infrastructure.Persistence.Extensions
 {
     public static class Extensions
     {
@@ -19,7 +19,7 @@ namespace BankingSystem.Infrastructure.Persistence
                 option.UseSqlServer(connectionString);
             });//.AddUnitOfWork<BankingSystemDbContext>();
 
-            services.AddTransient<IDbConnection>(sp => CreateConnection(configuration));
+            services.AddTransient(sp => CreateConnection(configuration));
             return services;
         }
 
@@ -52,7 +52,7 @@ namespace BankingSystem.Infrastructure.Persistence
             {
                 //c.EnableAnnotations();
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Banking Sytem", Version = "1.0" });
-                var filePath = Path.Combine(System.AppContext.BaseDirectory, "Banking System.xml");
+                var filePath = Path.Combine(AppContext.BaseDirectory, "Banking System.xml");
                 c.IncludeXmlComments(filePath: filePath, true);
             });
             return services;

@@ -1,7 +1,9 @@
-﻿using BankingSystem.Infrastructure.Persistence;
+﻿using BankingSystem.Infrastructure.Persistence.Extensions;
+using BankingSystem.Middleware;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using System.Reflection;
 
 namespace BankingSystem
@@ -33,7 +35,7 @@ namespace BankingSystem
 
 
             services.AddSwaggerService(Configuration);
-            //services.AddSingleton<ExceptionHandlingMiddleware>();
+            services.AddSingleton<ExceptionHandlingMiddleware>();
             //services.AddAutoMapper(typeof(Startup));
             services.AddMvc();
             services.AddHttpContextAccessor();
@@ -65,7 +67,7 @@ namespace BankingSystem
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-           // app.UseMiddleware<ExceptionHandlingMiddleware>();
+           app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             if (env.IsDevelopment())
             {
