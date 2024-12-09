@@ -41,7 +41,7 @@ namespace BankingSystem.Application.Query
             }
             catch (Exception e)
             {
-                _logger.LogError($"An error occurred while retrieving job types => {e.Message} || {e.StackTrace}");
+                _logger.LogError($"An error occurred while retrieving account types => {e.Message} || {e.StackTrace}");
 
                 return new BaseResponse<GetAllAccountDto>();
             }

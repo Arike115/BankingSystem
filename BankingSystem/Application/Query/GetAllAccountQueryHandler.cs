@@ -80,9 +80,9 @@ namespace BankingSystem.Application.Query
             {
                 if (e.InnerException != null)
                 {
-                    _logger.LogError($"An error occurred while retrieving job types => {e.InnerException.Message} || {e.InnerException.StackTrace}");
+                    _logger.LogError($"An error occurred while retrieving account types => {e.InnerException.Message} || {e.InnerException.StackTrace}");
                 }
-                _logger.LogError($"An error occurred while retrieving job types => {e.Message} || {e.StackTrace}");
+                _logger.LogError($"An error occurred while retrieving account types => {e.Message} || {e.StackTrace}");
 
                 return new BaseResponse<List<GetAllAccountDto>>();
             }

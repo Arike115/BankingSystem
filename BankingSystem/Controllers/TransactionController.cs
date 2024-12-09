@@ -26,8 +26,8 @@ namespace BankingSystem.Controllers
 
             return Ok(response);
         }
-        [HttpGet("get-all-account")]
-        public async Task<ActionResult<List<GetAllAccountDto>>> GetAllJob([FromQuery] GetAccountDetailsQuery query)
+        [HttpGet("get-accountransactionhistory")]
+        public async Task<ActionResult<List<GetTransactionHistoryDto>>> GetJobDetails([FromQuery] GetTransactionHistoryQuery query)
         {
             var account = await _mediator.Send(query);
             return Ok(account);
