@@ -31,16 +31,10 @@ namespace BankingSystem
 
 
                 // Add services to the container
-                //RepositoryRegistration.RepositoryRegDI(builder);
                 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
                 builder.Services.AddTransient<IJwtHandler, JwtHandler>();
-                //builder.Services.AddTransient<IAuthorizationHandler, PermissionsAuthorizationHandler>();
-                //builder.Services.AddTransient<IBusinessService, BusinessService>();
-                //builder.Services.AddTransient<IBusinessCategoryService, BusinessCategoryService>();
-
-
-
-                return builder;
+                builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
+                 return builder;
 
             }
 
