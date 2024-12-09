@@ -1,19 +1,11 @@
-using Azure;
 using BankingSystem.Application.Commands.AccountRegistration;
 using BankingSystem.Controllers;
-using BankingSystem.Domain.Entities;
 using BankingSystem.Domain.Model;
 using BankingSystem.Infrastructure.Persistence;
-using Castle.Core.Logging;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Data.Entity;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using Xunit;
 
 
 namespace TestBankingSystem
