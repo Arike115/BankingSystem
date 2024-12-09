@@ -6,6 +6,7 @@ namespace BankingSystem.Interface
     public interface IAccountRepository
     {
         Task<List<GetAllAccountDto>> GetAllAccount();
+        Task<GetAllAccountDto> GetAccountDetails(Guid accountId);
 
     }
 }

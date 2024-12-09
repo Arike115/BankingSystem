@@ -32,23 +32,36 @@ namespace BankingSystem.Application.Commands.TransactionRegistration
                    cancellationToken);
                 if (existingAccount == null)
                 {
-                    throw new InvalidOperationException("An account with the same does not exists.");
+                    throw new InvalidOperationException("An account with the account  number does not exists.");
                 }
 
                 if (request.Type == TransactionStatus.Debit && request.Amount > existingAccount.AccountBalance)
                 { 
                     throw new InvalidOperationException("Insufficient fund.");
                 }
-
-                if(request.ReceiverAccountName.Count() != 10)
+                
+                if(request.Type == TransactionStatus.Debit && request.ReceiverAccountName !=null && request.ReceiverAccountName.Count() != 10)
                 {
                     throw new InvalidOperationException("Incomplete AccountNumber.");
 
                 }
                 var data = new Transaction();
-
-                
-
+                data.AccountId = request.AccountId;
+                data.AccountName = request.AccountName;
+                data.Amount = request.Amount;
+                data.Remarks = request.Remarks;
+                data.TransactionDate = request.TransactionDate; 
+                data.TransactionType = request.TransactionType;
+                data.ReceiverAccountName = request.ReceiverAccountName; 
+                data.ReceiverNumber =  request.ReceiverNumber;
+                data.SenderAccountName = request.SenderAccountName;
+                data.SenderAccountNumber = request.SenderAccountNumber;
+                data.BankName = request.BankName;
+                data.Status = request.Status;
+                data.Type = request.Type;
+                data.CreatedBy = request.AccountName;
+                _context.Transaction.Add(data);
+                await _context.SaveChangesAsync(cancellationToken);
                 var command = new Account();
                 command.AccountName = request.AccountName;
                 command.AccountBalance = request.Amount;
@@ -59,7 +72,7 @@ namespace BankingSystem.Application.Commands.TransactionRegistration
             }
             catch (Exception e)
             {
-                _logger.LogError($"An error occurred while creating account => {e.InnerException.Message} || {e.InnerException.StackTrace}");
+                _logger.LogError($"An error occurred while creating account => {e.Message} || {e.StackTrace}");
                 return new BaseResponse(false, e.Message);
             }
 

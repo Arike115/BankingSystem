@@ -49,7 +49,7 @@ namespace BankingSystem.Application.Query
 
                 if (!string.IsNullOrEmpty(request.AccountNumber))
                 {
-                    accounts = accounts.Where(a => a.AccountNumber.Contains(request.AccountNumber)).ToList();
+                    accounts = accounts.Where(a => a.AccountNumber.ToString().Contains(request.AccountNumber)).ToList();
                 }
 
                 // Pagination

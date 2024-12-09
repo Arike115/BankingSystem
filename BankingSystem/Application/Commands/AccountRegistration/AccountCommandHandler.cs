@@ -47,6 +47,8 @@ namespace BankingSystem.Application.Commands.AccountRegistration
                 command.AccountNumber = long.Parse(GenerateRandomStringNumbersOnly(10)); 
                 command.AccountType = AccountType.Individual;
                 command.Address = request.Address;
+                command.CreatedBy = "Admin";
+                command.CreatedAt = DateTime.UtcNow;
 
                 _context.Account.Add(command);
                 await _context.SaveChangesAsync(cancellationToken);
@@ -55,7 +57,7 @@ namespace BankingSystem.Application.Commands.AccountRegistration
             }
             catch (Exception e)
             {
-                _logger.LogError($"An error occurred while creating account => {e.InnerException.Message} || {e.InnerException.StackTrace}");
+                _logger.LogError($"An error occurred while creating account => {e.Message} || {e.StackTrace}");
                 return new BaseResponse(false, e.Message);
             }
         }

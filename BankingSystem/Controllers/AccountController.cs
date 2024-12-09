@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Controllers
 {
-    [Authorize]
+   
     [Route("api/[controller]")]
     [ApiController]
 
@@ -30,8 +30,16 @@ namespace BankingSystem.Controllers
 
             return Ok(response);
         }
+        //[Authorize]
         [HttpGet("get-all-account")]
         public async Task<ActionResult<List<GetAllAccountDto>>> GetAllJob([FromQuery] GetAccountQuery query)
+        {
+            var account = await _mediator.Send(query);
+            return Ok(account);
+        }
+
+        [HttpGet("get-accountdetails")]
+        public async Task<ActionResult<List<GetAllAccountDto>>> GetJobDetails([FromQuery] GetAccountDetailsQuery query)
         {
             var account = await _mediator.Send(query);
             return Ok(account);
