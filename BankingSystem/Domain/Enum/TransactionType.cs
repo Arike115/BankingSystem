@@ -7,4 +7,22 @@
         Transfer
     }
 
+    public enum Status
+    {
+
+        Successful,
+        pending,
+        Failed,
+        Reversed
+
+    }
+
+    public enum TransactionStatus
+        {
+            Debit,
+            Credit
+
+        }
 }
+
+

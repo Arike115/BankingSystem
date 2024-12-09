@@ -1,5 +1,7 @@
 ﻿using System.Net;
+using Microsoft.AspNetCore.SignalR;
 using Solhigson.Framework.Utilities;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BankingSystem.Middleware
 {
@@ -13,6 +15,7 @@ namespace BankingSystem.Middleware
             _hub = hub;
             _next = next;
         }
+
 
         public async Task InvokeAsync(HttpContext context)
         {

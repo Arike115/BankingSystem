@@ -1,5 +1,4 @@
 ﻿using BankingSystem.Domain.Entities;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -13,6 +12,8 @@ namespace BankingSystem.Infrastructure.Persistence
         }
         public DbSet<Account> Account { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<ApplicationRole> ApplicationRole { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -2,12 +2,15 @@
 using BankingSystem.Application.Query;
 using BankingSystem.Domain.Dto;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
+
     public class AccountController : BaseController
     {
         private IMediator _mediator;

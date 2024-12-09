@@ -1,30 +1,24 @@
+using BankingSystem;
 using BankingSystem.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddDbContext<BankingSystemDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var builder = WebApplication.CreateBuilder(args)
+    .RegisterServices()
+    .RegisterDI()
+    .ConfigureSerilog();
+builder.WebHost.UseSentry(options =>
+{
+    options.Dsn = "https://89b221040692e2143821ab6d16152de3@o4507407409545216.ingest.us.sentry.io/45074074537164807416360960";
+    options.Debug = true; // Debug mode for troubleshooting
+    options.TracesSampleRate = 1.0; // 100% performance traces
+});
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+    .AddEnvironmentVariables();
+builder.ConfigureAuthServices();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
+app.ConfigureMiddleware();
 app.Run();

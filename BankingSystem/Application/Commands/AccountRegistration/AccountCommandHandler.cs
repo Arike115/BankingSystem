@@ -5,6 +5,7 @@ using BankingSystem.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace BankingSystem.Application.Commands.AccountRegistration
 {
@@ -43,7 +44,7 @@ namespace BankingSystem.Application.Commands.AccountRegistration
                 command.AccountName = request.AccountName;
                 command.Bvn = request.Bvn;
                 command.Nin = request.Nin;
-                command.AccountNumber = request.AccountNumber;
+                command.AccountNumber = long.Parse(GenerateRandomStringNumbersOnly(10)); 
                 command.AccountType = AccountType.Individual;
                 command.Address = request.Address;
 
@@ -57,6 +58,28 @@ namespace BankingSystem.Application.Commands.AccountRegistration
                 _logger.LogError($"An error occurred while creating account => {e.InnerException.Message} || {e.InnerException.StackTrace}");
                 return new BaseResponse(false, e.Message);
             }
+        }
+
+        public static string GenerateRandomStringNumbersOnly(int length)
+        {
+            string randomstring;
+
+            StringBuilder oBuilder = new StringBuilder();
+            while (oBuilder.Length <= length)
+            {
+                Guid guid = Guid.NewGuid();
+                oBuilder.Append(guid.ToString("N").ToUpperInvariant());
+            }
+            randomstring = oBuilder.ToString();
+
+            byte[] asciiBytes = Encoding.ASCII.GetBytes(randomstring);
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < asciiBytes.Length; i++)
+            {
+                builder.Append(asciiBytes[i].ToString());
+            }
+
+            return builder.ToString(0, length);
         }
     }
 

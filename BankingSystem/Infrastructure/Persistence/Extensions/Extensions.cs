@@ -44,18 +44,18 @@ namespace BankingSystem.Infrastructure.Persistence.Extensions
             return services;
         }
 
-        public static IServiceCollection AddSwaggerService(this IServiceCollection services,
-           IConfiguration configuration)
-        {
-            services.AddSwaggerGen(c =>
+        //public static IServiceCollection AddSwaggerService(this IServiceCollection services,
+        //   IConfiguration configuration)
+        //{
+        //    services.AddSwaggerGen(c =>
 
-            {
-                //c.EnableAnnotations();
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Banking Sytem", Version = "1.0" });
-                var filePath = Path.Combine(AppContext.BaseDirectory, "Banking System.xml");
-                c.IncludeXmlComments(filePath: filePath, true);
-            });
-            return services;
-        }
+        //    {
+        //        //c.EnableAnnotations();
+        //        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Banking Sytem", Version = "1.0" });
+        //        var filePath = Path.Combine(AppContext.BaseDirectory, "Banking System.xml");
+        //        c.IncludeXmlComments(filePath: filePath, true);
+        //    });
+        //    return services;
+        //}
     }
 }

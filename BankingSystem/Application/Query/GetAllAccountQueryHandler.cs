@@ -1,9 +1,9 @@
-﻿using BankingSystem.Domain.Dto;
+﻿using AutoMapper;
+using BankingSystem.Domain.Dto;
 using BankingSystem.Domain.Model;
 using BankingSystem.Infrastructure.Persistence.Extensions;
 using BankingSystem.Interface;
 using Hangfire.Common;
-using MapsterMapper;
 using MediatR;
 using System.Globalization;
 

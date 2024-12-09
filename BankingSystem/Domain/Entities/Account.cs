@@ -11,8 +11,7 @@ namespace BankingSystem.Domain.Entities
         [MaxLength(100)]
         public string AccountName { get; set; }
         [Required]
-        [MaxLength(50)]
-        public string AccountNumber { get; set; }
+        public long AccountNumber { get; set; }
         [Required]
         [MaxLength(50)]
         public string Bvn { get; set; }

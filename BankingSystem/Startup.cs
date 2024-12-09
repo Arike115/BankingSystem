@@ -1,145 +1,122 @@
-﻿using BankingSystem.Infrastructure.Persistence.Extensions;
+﻿using BankingSystem.Configs;
+using BankingSystem.Infrastructure.Persistence.Extensions;
 using BankingSystem.Middleware;
+using FluentValidation.AspNetCore;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Serilog;
+using Serilog.Events;
+using Solhigson.Framework.Persistence.EntityModels;
+using System.Data;
 using System.Reflection;
 
 namespace BankingSystem
 {
     public partial class Startup
     {
-        public Startup(IConfiguration configuration)
+
+        public static WebApplicationBuilder RegisterServices(this WebApplicationBuilder builder)
         {
-            Configuration = configuration;
-        }
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
 
-        private ILogger<Startup> _logger;
-        public IConfiguration Configuration { get; }
+           // builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-
-            services.Configure<ForwardedHeadersOptions>(options =>
+            builder.Services.AddSingleton<IDbConnection>(db =>
             {
-                options.ForwardedHeaders =
-                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                var connectionString = builder.Configuration.GetConnectionString("Default");
+                var connection = new SqlConnection(connectionString);
+                return connection;
             });
-
-
-            ConfigureDI(services);
-            services.AddPersistence(Configuration);
-            services.AddApplicationServices(Configuration);
-
-
-            services.AddSwaggerService(Configuration);
-            services.AddSingleton<ExceptionHandlingMiddleware>();
-            //services.AddAutoMapper(typeof(Startup));
-            services.AddMvc();
-            services.AddHttpContextAccessor();
-            services.AddMvcCore().AddControllersAsServices();
-            services.AddMemoryCache();
-
-            //services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
-
-            services.AddControllers(options =>
+            builder.Services.AddCors(options => options.AddPolicy("BankingSystem", policyBuilder =>
             {
-                options.EnableEndpointRouting = false;
-                //options.Filters.Add<ValidationFilter>();
-            })
-            //.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>())
-            .ConfigureApiBehaviorOptions(option => { option.SuppressModelStateInvalidFilter = false; });
-            services.AddControllers();
+                var settings = builder.Configuration.GetSection("AppSettings").Get<AppSettings>();
+                policyBuilder.WithOrigins(settings.CORS_ORIGIN)
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .AllowCredentials();
+            }));
 
-           
-            //services.AddHttpClient<SlackService>();
-            
-
-            //services.UseSerilog((hostingContext, loggerConfiguration) =>
-            //{
-            //    var logConfig = loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration);
-            //});
-
-        }
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-
-           app.UseMiddleware<ExceptionHandlingMiddleware>();
-
-            if (env.IsDevelopment())
+            builder.Services.AddSwaggerGen(option =>
             {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
+                //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+                //option.IncludeXmlComments(xmlPath);
+
+                option.SwaggerDoc("v1", new OpenApiInfo { Title = "BankingSystem Api provider", Version = "v1" });
+
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    c.SwaggerEndpoint("../swagger/v1/swagger.json", "Rezumii.JobManager v1");
+                    Description =
+                    "JWT Authorization header using the Bearer scheme. \r\n\r\n " +
+                    "Enter 'Bearer'  and then your token in the text input " +
+                    "below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
                 });
-            }
-            else
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
 
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
 
-
-            //app.UseSentryTracing();
-
-            app.UseForwardedHeaders();
-            app.UseHttpsRedirection();
-            
-
-            var serviceProvider = app.ApplicationServices;
-           
-
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
-            app.UseStaticFiles();
-           
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
+                        },
+                        new List<string>()
+                    }
+                });
             });
-
-            app.UseDefaultFiles(new DefaultFilesOptions
-            {
-                DefaultFileNames = new List<string> { "index.html" }
-            });
-            app.UseStaticFiles();
-            //app.UseSerilogRequestLogging();
-
-            //TableMigrationScript();
-            //StoredProcedureMigrationScript();
+            return builder;
         }
-        //public class SerilogDbUpLog : IUpgradeLog
-        //{
-        //    private readonly ILogger<Startup> _logger;
 
-        //    public SerilogDbUpLog(ILogger<Startup> logger)
-        //    {
-        //        _logger = logger;
-        //    }
 
-        //    public void WriteError(string format, params object[] args)
-        //    {
-        //        Log.Error(format, args);
-        //    }
+        public static WebApplicationBuilder ConfigureSerilog(this WebApplicationBuilder builder)
+        {
+            builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
+            {
+                var logConfig = loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration)
+                   .Enrich.FromLogContext()
+                   .WriteTo.File(@"logs\log.txt", rollingInterval: RollingInterval.Day,
+                   restrictedToMinimumLevel: LogEventLevel.Information,
+                   outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
+                   shared: true);
 
-        //    public void WriteInformation(string format, params object[] args)
-        //    {
-        //        Log.Information(format, args);
-        //    }
-
-        //    public void WriteWarning(string format, params object[] args)
-        //    {
-        //        Log.Warning(format, args);
-        //    }
-        //}
-
+                if (!builder.Environment.IsDevelopment())
+                {
+                    logConfig.WriteTo.Sentry(o =>
+                    {
+                        o.Environment = hostingContext.HostingEnvironment.EnvironmentName;
+                        // Debug and higher are stored as breadcrumbs (default is Information)
+                        o.MinimumBreadcrumbLevel = LogEventLevel.Information;
+                        // Warning and higher is sent as event (default is Error)
+                        o.MinimumEventLevel = LogEventLevel.Error;
+                        o.Dsn = hostingContext.Configuration.GetValue<string>("AppSettings:SentryUrl");
+                        o.Debug = true; // Debug mode for troubleshooting
+                        o.TracesSampleRate = 1.0;
+                    });
+                }
+            });
+            return builder;
+            
+        }
 
     }
 }
