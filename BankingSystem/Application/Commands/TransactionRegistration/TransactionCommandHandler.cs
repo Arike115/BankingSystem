@@ -53,17 +53,17 @@ namespace BankingSystem.Application.Commands.TransactionRegistration
                    cancellationToken);
                 if (existingAccount == null)
                 {
-                    throw new InvalidOperationException("An account with the account  number does not exists.");
+                    return new BaseResponse(false, "An account with the account  number does not exists.");
                 }
 
                 if (request.Type == TransactionStatus.Debit && request.Amount > existingAccount.AccountBalance)
-                { 
-                    throw new InvalidOperationException("Insufficient fund.");
+                {
+                    return new BaseResponse(false, "Insufficient fund.");
                 }
                 
                 if(request.Type == TransactionStatus.Debit && request.ReceiverAccountName !=null && request.ReceiverAccountName.Count() != 10)
                 {
-                    throw new InvalidOperationException("Incomplete AccountNumber.");
+                    return new BaseResponse(false, "Incomplete AccountNumber.");
 
                 }
                 using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);

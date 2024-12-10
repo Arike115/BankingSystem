@@ -63,7 +63,7 @@ namespace BankingSystem.Application.Commands.AccountRegistration
 
                 if (existingAccount != null)
                 {
-                    throw new InvalidOperationException("An account with the same details already exists.");
+                    return new BaseResponse(false, "An account with the same details already exists.");
                 }
                 var command = new Account();
                 command.AccountName = request.AccountName;

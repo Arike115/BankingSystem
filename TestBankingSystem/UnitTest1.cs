@@ -12,7 +12,6 @@ namespace TestBankingSystem
 {
     public class Tests
     {
-
         private BankingSystemDbContext _dbcontext;
 
         private readonly Mock<IMediator> _mediatorMock;
@@ -22,6 +21,7 @@ namespace TestBankingSystem
 
         public Tests()
         {
+
             _mediatorMock = new Mock<IMediator>();
             _loggerMock = new Mock<ILogger<AccountController>>();
             _account = new AccountController(_mediatorMock.Object, _loggerMock.Object);
@@ -101,7 +101,6 @@ namespace TestBankingSystem
             };
 
 
-
             var baseResponse = new BaseResponse
             {
                 Information = "",
@@ -134,6 +133,7 @@ namespace TestBankingSystem
         [TearDown]
         public void TearDown()
         {
+
             // Dispose of the DbContext to release resources
             _dbcontext?.Dispose();
         }
