@@ -25,7 +25,7 @@ namespace BankingSystem.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost("create-transaction")]
-        public async Task<ActionResult> CreateTransanction([FromBody] TransactionCommand command)
+        public async Task<IActionResult> CreateTransanction([FromBody] TransactionCommand command)
         {
             var response = await _mediator.Send(command);
 
@@ -41,7 +41,7 @@ namespace BankingSystem.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("get-accountransactionhistory")]
-        public async Task<ActionResult<List<GetTransactionHistoryDto>>> GetJobDetails([FromQuery] GetTransactionHistoryQuery query)
+        public async Task<IActionResult> GetJobDetails([FromQuery] GetTransactionHistoryQuery query)
         {
             var account = await _mediator.Send(query);
             return Ok(account);

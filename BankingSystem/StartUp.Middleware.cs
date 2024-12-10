@@ -18,7 +18,7 @@ namespace BankingSystem
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("../swagger/v1/swagger.json", "Rezumii.JobManager v1");
+                    c.SwaggerEndpoint("../swagger/v1/swagger.json", "Banking System");
                 });
             }
             else

@@ -29,7 +29,7 @@ namespace BankingSystem.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost("create-account")]
-        public async Task<ActionResult> CreateAccount([FromBody] AccountCommand command)
+        public async Task<IActionResult> CreateAccount([FromBody] AccountCommand command)
         {
             var response = await _mediator.Send(command);
 
@@ -44,7 +44,7 @@ namespace BankingSystem.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("get-all-account")]
-        public async Task<ActionResult<List<GetAllAccountDto>>> GetAllJob([FromQuery] GetAccountQuery query)
+        public async Task<IActionResult> GetAllJob([FromQuery] GetAccountQuery query)
         {
             var account = await _mediator.Send(query);
             return Ok(account);
@@ -55,7 +55,7 @@ namespace BankingSystem.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("get-accountdetails")]
-        public async Task<ActionResult<List<GetAllAccountDto>>> GetJobDetails([FromQuery] GetAccountDetailsQuery query)
+        public async Task<IActionResult> GetJobDetails([FromQuery] GetAccountDetailsQuery query)
         {
             var account = await _mediator.Send(query);
             return Ok(account);
