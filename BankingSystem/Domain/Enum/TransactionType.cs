@@ -2,7 +2,7 @@
 {
     public enum TransactionType
     {
-        Withdrawal,
+        Withdrawal = 1,
         Deposit,
         Transfer
     }
@@ -10,7 +10,7 @@
     public enum Status
     {
 
-        Successful,
+        Successful=1,
         pending,
         Failed,
         Reversed
@@ -19,8 +19,8 @@
 
     public enum TransactionStatus
         {
-            Debit,
-            Credit
+            Debit =1,
+            Credit = 2
 
         }
 }

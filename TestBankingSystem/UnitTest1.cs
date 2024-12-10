@@ -12,6 +12,7 @@ namespace TestBankingSystem
 {
     public class Tests
     {
+
         private BankingSystemDbContext _dbcontext;
 
         private readonly Mock<IMediator> _mediatorMock;
@@ -38,6 +39,7 @@ namespace TestBankingSystem
         [Test]
         public async Task CreateAccount_ShouldReturnOk_WhenResponseStatusIsTrue()
         {
+
             //Arrange
             var rnd = new Random();
 
@@ -82,6 +84,7 @@ namespace TestBankingSystem
         [Test]
         public async Task CreateAccount_ShouldReturnBadRequest_WhenResponseStatusIsFalse()
         {
+
             //Arrange
             var rnd = new Random();
 

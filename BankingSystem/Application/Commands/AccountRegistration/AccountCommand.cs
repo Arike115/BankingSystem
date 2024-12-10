@@ -5,6 +5,9 @@ using MediatR;
 
 namespace BankingSystem.Application.Commands.AccountRegistration
 {
+    /// <summary>
+    /// handles the handler fr creating the Account for user
+    /// </summary>
     public class AccountCommand : IRequest<BaseResponse>
     {
         public string AccountName { get; set; }
@@ -17,6 +20,9 @@ namespace BankingSystem.Application.Commands.AccountRegistration
         public bool IsDeleted { get; set; }
     }
 
+    /// <summary>
+    /// handles the validation for the properties
+    /// </summary>
     public class AccountCommandCommandValidator : AbstractValidator<AccountCommand>
     {
 

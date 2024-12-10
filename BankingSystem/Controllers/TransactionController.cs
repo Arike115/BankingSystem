@@ -16,6 +16,14 @@ namespace BankingSystem.Controllers
             _mediator = mediator;
             _logger = logger;
         }
+        /// <summary>
+        /// handles the creation of transaction for the account
+        /// the account number is the bankingsystem account user and the sender or receiver account and name is the where the user is sending
+        /// money to or where the user is receiving the money from
+        /// status : Debit is 1, credit is 2
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         [HttpPost("create-transaction")]
         public async Task<ActionResult> CreateTransanction([FromBody] TransactionCommand command)
         {
@@ -26,6 +34,12 @@ namespace BankingSystem.Controllers
 
             return Ok(response);
         }
+
+        /// <summary>
+        /// this get the user transaction history
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         [HttpGet("get-accountransactionhistory")]
         public async Task<ActionResult<List<GetTransactionHistoryDto>>> GetJobDetails([FromQuery] GetTransactionHistoryQuery query)
         {

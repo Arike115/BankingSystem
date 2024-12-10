@@ -25,10 +25,35 @@ namespace BankingSystem.Application.Commands.AccountRegistration
             _context = context;
         }
 
+        /// <summary>
+        /// this method create account for user and it also auto generate the account number with neccessary checks
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public async Task<BaseResponse> Handle(AccountCommand request, CancellationToken cancellationToken)
         {
             try
             {
+
+                if (!string.IsNullOrWhiteSpace(request.AccountName))
+                {
+                    return new BaseResponse(false, "Account Name canot be empty");
+
+                }
+                if (!string.IsNullOrWhiteSpace(request.AccountNumber))
+                {
+                    return new BaseResponse(false, "account number cannot be empty");
+                }
+                if (!string.IsNullOrWhiteSpace(request.Bvn))
+                {
+                    return new BaseResponse(false, "bvn is required");
+                }
+                if (!string.IsNullOrWhiteSpace(request.Nin))
+                {
+                    return new BaseResponse(false, "nin is required");
+                }
                 var existingAccount = await _context.Account
              .FirstOrDefaultAsync(a =>
                  a.AccountName == request.AccountName ||
@@ -62,6 +87,11 @@ namespace BankingSystem.Application.Commands.AccountRegistration
             }
         }
 
+        /// <summary>
+        /// this method is used for generating the random account number
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
         public static string GenerateRandomStringNumbersOnly(int length)
         {
             string randomstring;

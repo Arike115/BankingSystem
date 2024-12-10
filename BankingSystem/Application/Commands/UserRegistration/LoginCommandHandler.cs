@@ -37,7 +37,12 @@ namespace BankingSystem.Application.Commands.UserRegistration
             _hostingEnvironment = hostingEnvironment;
             _jwtHandler = jwtHandler;
         }
-
+        /// <summary>
+        /// this method is use to log the user in, do the neccessary checks for the user and also generate a token
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<BaseResponse<JsonWebToken>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByNameAsync(request.Email)
@@ -77,6 +82,11 @@ namespace BankingSystem.Application.Commands.UserRegistration
 
         }
 
+        /// <summary>
+        /// Generate the token for the user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public async Task<Domain.Model.JsonWebToken> GenerateAuthResponseAsync(ApplicationUser user)
         {
             List<Claim> claims = new List<Claim>();
