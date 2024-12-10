@@ -47,9 +47,9 @@ namespace BankingSystem
             builder.Services.AddSwaggerGen(option =>
             {
                 //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, "Bankingsystem.xml");
 
-                //option.IncludeXmlComments(xmlPath);
+                option.IncludeXmlComments(xmlPath);
 
                 option.SwaggerDoc("v1", new OpenApiInfo { Title = "BankingSystem Api provider", Version = "v1" });
 
